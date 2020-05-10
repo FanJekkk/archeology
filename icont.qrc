@@ -1,0 +1,9 @@
+<RCC>
+  <qresource prefix="images">
+    <file>image/avatar.png</file>
+    <file>image/tt3.jpg</file>
+    <file>image/analytics.png</file>
+    <file>image/search.png</file>
+    <file>image/unn.png</file>
+  </qresource>
+</RCC>
