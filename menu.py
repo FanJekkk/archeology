@@ -12,6 +12,9 @@ from PySide2 import QtCore, QtGui, QtWidgets
 import dbarch
 import search
 import analyz
+import sqlite3
+
+conn = sqlite3.connect("database.db")
 
 class Ui_MenuWindow(object):
     def closeWindow(self, MenuWindow):
@@ -33,16 +36,18 @@ class Ui_MenuWindow(object):
         self.window.show()
     def setupUi(self, MenuWindow):
         MenuWindow.setObjectName("MenuWindow")
-        MenuWindow.resize(800, 400)
-        MenuWindow.setMinimumSize(QtCore.QSize(800, 400))
-        MenuWindow.setMaximumSize(QtCore.QSize(800, 400))
+        MenuWindow.resize(1000, 620)
+        MenuWindow.setMinimumSize(QtCore.QSize(1000, 620))
+        MenuWindow.setMaximumSize(QtCore.QSize(1000, 620))
+        MenuWindow.setStyleSheet(" \n"
+                                        "  font-size: 18px;\n")
         self.centralwidget = QtWidgets.QWidget(MenuWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.horizontalLayout = QtWidgets.QHBoxLayout(self.centralwidget)
         self.horizontalLayout.setObjectName("horizontalLayout")
         self.pushButton_2 = QtWidgets.QPushButton(self.centralwidget)
         self.pushButton_2.setEnabled(True)
-        self.pushButton_2.setMaximumSize(QtCore.QSize(200, 200))
+        self.pushButton_2.setMaximumSize(QtCore.QSize(250, 250))
         font = QtGui.QFont()
         self.pushButton_2.setFont(font)
         self.pushButton_2.setFocusPolicy(QtCore.Qt.WheelFocus)
@@ -81,7 +86,7 @@ class Ui_MenuWindow(object):
         self.pushButton_2.clicked.connect(lambda: self.closeWindow(MenuWindow))
         self.horizontalLayout.addWidget(self.pushButton_2)
         self.pushButton_3 = QtWidgets.QPushButton(self.centralwidget)
-        self.pushButton_3.setMaximumSize(QtCore.QSize(200, 200))
+        self.pushButton_3.setMaximumSize(QtCore.QSize(250, 250))
         self.pushButton_3.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
         self.pushButton_3.setAcceptDrops(False)
         self.pushButton_3.setLayoutDirection(QtCore.Qt.LeftToRight)
@@ -101,13 +106,13 @@ class Ui_MenuWindow(object):
                                         "     background-color:#FFE8DB;\n"
                                         " }\n"
                                         "")
-        self.pushButton_3.setIconSize(QtCore.QSize(130, 160))
+        self.pushButton_3.setIconSize(QtCore.QSize(160, 200))
         self.pushButton_3.setObjectName("pushButton_3")
         self.pushButton_3.clicked.connect(self.opensearch)
         self.pushButton_3.clicked.connect(lambda: self.closeWindow(MenuWindow))
         self.horizontalLayout.addWidget(self.pushButton_3)
         self.pushButton = QtWidgets.QPushButton(self.centralwidget)
-        self.pushButton.setMaximumSize(QtCore.QSize(200, 200))
+        self.pushButton.setMaximumSize(QtCore.QSize(250, 250))
         self.pushButton.setStyleSheet(" QPushButton#pushButton {\n"
                                         "     background-color: #EEDDFF;\n"
                                         "  border: 1px solid #7922CC;\n"
@@ -125,7 +130,7 @@ class Ui_MenuWindow(object):
                                         " }\n"
                                         "")
         self.pushButton.setText("")
-        self.pushButton.setIconSize(QtCore.QSize(110, 120))
+        self.pushButton.setIconSize(QtCore.QSize(200, 240))
         self.pushButton.setObjectName("pushButton")
         self.pushButton.clicked.connect(self.analyze)
         self.pushButton.clicked.connect(lambda: self.closeWindow(MenuWindow))
@@ -140,7 +145,7 @@ class Ui_MenuWindow(object):
 
     def retranslateUi(self, MenuWindow):
         MenuWindow.setWindowTitle(QtWidgets.QApplication.translate("MenuWindow", "Главное меню", None, -1))
-        self.pushButton_2.setText(QtWidgets.QApplication.translate("MenuWindow", "Пополнение/редактирование\n"
+        self.pushButton_2.setText(QtWidgets.QApplication.translate("MenuWindow", "Пополнение/\nредактирование "
                                                                                  "базы", None, -1))
         self.pushButton_2.setToolTip(
             QtWidgets.QApplication.translate("MenuWindow", "Пополнение/редактирование базы",

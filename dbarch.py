@@ -15,13 +15,27 @@ import change
 import delete
 import menu
 import sqlite3
-conn = sqlite3.connect('./database.db')
+import numpy as np
+from sklearn.model_selection import train_test_split
+import pandas as pd
+from sklearn.preprocessing import StandardScaler
+from sklearn.preprocessing import OneHotEncoder
+from sklearn.metrics import accuracy_score
+import pandas
+from keras.models import Sequential
+from keras.layers import Dense
+conn = sqlite3.connect('database.db')
 
 class Ui_OtherWindow(object):
     def loadData(self):
-        query = "SELECT picture, id_artefact, name, color_id, type_id, thickness, form, water_absorption, hardness, " \
-                "defective, admixture FROM artefacts"
+        query = "SELECT picture, id_artefact, name, color_id, type_id, admixture_id, thickness_id, water_absorption_id, defect_id, texture_id, local " \
+                " FROM artefacts"
         res = conn.cursor().execute(query)
+        cur = conn.cursor()
+        query1 = "SELECT id_artefact, name, color_id, type_id, admixture_id, thickness_id, water_absorption_id, defect_id, texture_id, local " \
+                " FROM artefacts"
+        ras = cur.execute(query1)
+        rows = cur.fetchall()
         for row_number, row_data in enumerate(res):
             self.tableWidget.insertRow(row_number)
             for column_number, data in enumerate(row_data):
@@ -70,6 +84,8 @@ class Ui_OtherWindow(object):
         OtherWindow.setObjectName("OtherWindow")
         OtherWindow.setWindowModality(QtCore.Qt.NonModal)
         OtherWindow.resize(1000, 620)
+        OtherWindow.setStyleSheet(" \n"
+                                        "  font-size: 18px;\n")
         self.centralwidget = QtWidgets.QWidget(OtherWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.horizontalLayout_2 = QtWidgets.QHBoxLayout(self.centralwidget)
@@ -153,6 +169,9 @@ class Ui_OtherWindow(object):
         self.horizontalLayout.addWidget(self.pushButton_4)
         self.verticalLayout_2.addLayout(self.horizontalLayout)
         self.tableWidget = QtWidgets.QTableWidget(self.centralwidget)
+        self.tableWidget.setStyleSheet(" QTableWidget {\n"
+                                        "     font-size: 24px;\n"
+                                        "}\n")
         self.tableWidget.setAcceptDrops(False)
         self.tableWidget.setAutoFillBackground(False)
         self.tableWidget.setSizeAdjustPolicy(QtWidgets.QAbstractScrollArea.AdjustIgnored)
@@ -190,7 +209,15 @@ class Ui_OtherWindow(object):
         item = QtWidgets.QTableWidgetItem()
         self.tableWidget.setHorizontalHeaderItem(10, item)
         self.tableWidget.setColumnWidth(0, 180)
-        self.tableWidget.setColumnWidth(7, 180)
+        self.tableWidget.setColumnWidth(2, 200)
+        self.tableWidget.setColumnWidth(3, 200)
+        self.tableWidget.setColumnWidth(4, 200)
+        self.tableWidget.setColumnWidth(5, 200)
+        self.tableWidget.setColumnWidth(6, 200)
+        self.tableWidget.setColumnWidth(7, 150)
+        self.tableWidget.setColumnWidth(8, 200)
+        self.tableWidget.setColumnWidth(9, 200)
+        self.tableWidget.setColumnWidth(10, 200)
         self.tableWidget.horizontalHeader().setVisible(True)
         self.tableWidget.horizontalHeader().setCascadingSectionResizes(True)
         self.tableWidget.horizontalHeader().setHighlightSections(True)
@@ -237,12 +264,12 @@ class Ui_OtherWindow(object):
         self.tableWidget.horizontalHeaderItem(2).setText(QtWidgets.QApplication.translate("OtherWindow", "Часть сосуда", None, -1))
         self.tableWidget.horizontalHeaderItem(3).setText(QtWidgets.QApplication.translate("OtherWindow", "Цвет", None, -1))
         self.tableWidget.horizontalHeaderItem(4).setText(QtWidgets.QApplication.translate("OtherWindow", "Тип артефакта", None, -1))
-        self.tableWidget.horizontalHeaderItem(5).setText(QtWidgets.QApplication.translate("OtherWindow", "Толщина", None, -1))
-        self.tableWidget.horizontalHeaderItem(6).setText(QtWidgets.QApplication.translate("OtherWindow", "Форма", None, -1))
+        self.tableWidget.horizontalHeaderItem(5).setText(QtWidgets.QApplication.translate("OtherWindow", "Примеси", None, -1))
+        self.tableWidget.horizontalHeaderItem(6).setText(QtWidgets.QApplication.translate("OtherWindow", "Толщина", None, -1))
         self.tableWidget.horizontalHeaderItem(7).setText(QtWidgets.QApplication.translate("OtherWindow", "Водопоглощение", None, -1))
-        self.tableWidget.horizontalHeaderItem(8).setText(QtWidgets.QApplication.translate("OtherWindow", "Твердость", None, -1))
-        self.tableWidget.horizontalHeaderItem(9).setText(QtWidgets.QApplication.translate("OtherWindow", "Брак", None, -1))
-        self.tableWidget.horizontalHeaderItem(10).setText(QtWidgets.QApplication.translate("OtherWindow", "Примеси", None, -1))
+        self.tableWidget.horizontalHeaderItem(8).setText(QtWidgets.QApplication.translate("OtherWindow", "Брак", None, -1))
+        self.tableWidget.horizontalHeaderItem(9).setText(QtWidgets.QApplication.translate("OtherWindow", "Текстура массы", None, -1))
+        self.tableWidget.horizontalHeaderItem(10).setText(QtWidgets.QApplication.translate("OtherWindow", "Место нахождения", None, -1))
         self.menu.setTitle(QtWidgets.QApplication.translate("OtherWindow", "Меню", None, -1))
         self.action.setText(QtWidgets.QApplication.translate("OtherWindow", "Поиск по базе", None, -1))
         self.action_2.setText(QtWidgets.QApplication.translate("OtherWindow", "Анализ артефактов", None, -1))

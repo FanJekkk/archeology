@@ -12,6 +12,7 @@ from PySide2 import QtCore, QtGui, QtWidgets
 import charch
 import dbarch
 from PyQt5.QtWidgets import *
+import webbrowser
 import sqlite3
 conn = sqlite3.connect('./database.db')
 
@@ -41,11 +42,46 @@ class Ui_Dialog(object):
             self.ui1.imagelabel.setGeometry(0,0,120,120)
             self.ui1.lineEdit.setText(searchrol)
             self.ui1.lineEdit_2.setText(data[3])
+            self.ui1.lineEdit_5.setText(data[12])
+            self.ui1.lineEdit_4.setText(data[11])
             name = data[3]
-            self.ui1.comboBox_4.addItem(str(data[4]))
+
             cur.execute("SELECT * FROM colors")
             for row in cur:
                 self.ui1.comboBox_4.addItem(str(row[1]))
+            index = self.ui1.comboBox_4.findText(str(data[4]), QtCore.Qt.MatchFixedString)
+            self.ui1.comboBox_4.setCurrentIndex(index)
+            cur.execute("SELECT * FROM types")
+            for row in cur:
+                self.ui1.comboBox_3.addItem(str(row[1]))
+            index = self.ui1.comboBox_3.findText(str(data[5]), QtCore.Qt.MatchFixedString)
+            self.ui1.comboBox_3.setCurrentIndex(index)
+            cur.execute("SELECT * FROM admixture")
+            for row in cur:
+                self.ui1.comboBox.addItem(str(row[1]))
+            index = self.ui1.comboBox.findText(str(data[6]), QtCore.Qt.MatchFixedString)
+            self.ui1.comboBox.setCurrentIndex(index)
+            cur.execute("SELECT * FROM thickness")
+            for row in cur:
+                self.ui1.comboBox_2.addItem(str(row[1]))
+            index = self.ui1.comboBox_2.findText(str(data[7]), QtCore.Qt.MatchFixedString)
+            self.ui1.comboBox_2.setCurrentIndex(index)
+            cur.execute("SELECT * FROM water_absorption")
+            for row in cur:
+                self.ui1.comboBox_5.addItem(str(row[1]))
+            index = self.ui1.comboBox_5.findText(str(data[8]), QtCore.Qt.MatchFixedString)
+            self.ui1.comboBox_5.setCurrentIndex(index)
+            cur.execute("SELECT * FROM defect")
+            for row in cur:
+                self.ui1.comboBox_6.addItem(str(row[1]))
+            index = self.ui1.comboBox_6.findText(str(data[9]), QtCore.Qt.MatchFixedString)
+            self.ui1.comboBox_6.setCurrentIndex(index)
+            cur.execute("SELECT * FROM texture")
+            for row in cur:
+                self.ui1.comboBox_7.addItem(str(row[1]))
+            cur.close()
+            index = self.ui1.comboBox_7.findText(str(data[10]), QtCore.Qt.MatchFixedString)
+            self.ui1.comboBox_7.setCurrentIndex(index)
             Dialog.hide()
         elif searchrol == '':
             self.lineEdit.setText("")
@@ -58,7 +94,9 @@ class Ui_Dialog(object):
         cur.close()
     def setupUi(self, Dialog):
         Dialog.setObjectName("Dialog")
-        Dialog.resize(400, 341)
+        Dialog.resize(600, 400)
+        Dialog.setStyleSheet(" \n"
+                                        "  font-size: 18px;\n")
         self.verticalLayout = QtWidgets.QVBoxLayout(Dialog)
         self.verticalLayout.setObjectName("verticalLayout")
         self.verticalLayout_2 = QtWidgets.QVBoxLayout()

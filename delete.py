@@ -47,7 +47,9 @@ class Ui_Dialog(QtWidgets.QDialog):
         cur.close()
     def setupUi(self, Dialog):
         Dialog.setObjectName("Dialog")
-        Dialog.resize(373, 307)
+        Dialog.resize(600, 400)
+        Dialog.setStyleSheet(" \n"
+                             "  font-size: 18px;\n")
         self.verticalLayout = QtWidgets.QVBoxLayout(Dialog)
         self.verticalLayout.setObjectName("verticalLayout")
         self.label = QtWidgets.QLabel(Dialog)

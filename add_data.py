@@ -1,54 +1,17 @@
-# -*- coding: utf-8 -*-
-
-# Form implementation generated from reading ui file 'add.ui',
-# licensing of 'add.ui' applies.
-#
-# Created: Sat Mar 14 17:43:00 2020
-#      by: pyside2-uic  running on PySide2 5.13.0
-#
-# WARNING! All changes made in this file will be lost!
-
 from PySide2 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QLabel, QMainWindow, QFileDialog
-import dbarch
+import analyz
 import sys
 import sqlite3
 from PyQt5.QtWidgets import *
 conn = sqlite3.connect('./database.db')
 
 class Ui_MainWindow(QMainWindow):
-
-    def chooseImage(self):
-        fname,_ = QFileDialog.getOpenFileName(self, 'Open File', 'c\\', 'Image file (*.jpg)')
-        if fname:
-            self.lineEdit_3.setText(fname)
-            pixmap = QtGui.QPixmap(fname)
-            pixmap = pixmap.scaledToWidth(300)
-            self.imagelabel.setPixmap(pixmap)
-            self.imagelabel.show()
-    def check_local(self):
-        local = self.lineEdit_4.text()
-        if local == '':
-            self.lineEdit_4.setText("нет данных")
-        else:
-            self.lineEdit_4.setText(local)
-        return local
-    def convertImage(self):
-        fname = self.lineEdit_3.text()
-        if fname == '':
-            self.lineEdit_3.setText("C:/Users/dns/PycharmProjects/qtarch/1234.jpg")
-            with open('1234.jpg', 'rb') as file:
-                picture = file.read()
-        else:
-            with open(fname, 'rb') as file:
-                picture = file.read()
-        return picture
-
     def closeWindow(self, MainWindow):
         MainWindow.hide()
     def openWindow(self):
         self.window = QtWidgets.QMainWindow()
-        self.ui = dbarch.Ui_OtherWindow()
+        self.ui = analyz.Ui_MainWindow()
         self.ui.setupUi(self.window)
         self.window.show()
     def choose_color(self):
@@ -88,14 +51,8 @@ class Ui_MainWindow(QMainWindow):
         cur.execute("SELECT * FROM texture")
         for row in cur:
             self.comboBox_7.addItem(str(row[1]))
-    def adding(self, fname):
-        id_artefact = str(self.lineEdit.text())
-        name = self.lineEdit_2.text()
-        local = self.lineEdit_4.text()
-        if local == '':
-            self.lineEdit_4.setText("нет данных")
-        else:
-            self.lineEdit_4.setText(local)
+    def adding(self):
+        classes = str(self.lineEdit.text())
         color_id = self.comboBox.itemText(self.comboBox.currentIndex())
         type_id = self.comboBox_4.itemText(self.comboBox_4.currentIndex())
         admixture_id = self.comboBox_3.itemText(self.comboBox_3.currentIndex())
@@ -103,51 +60,19 @@ class Ui_MainWindow(QMainWindow):
         water_absorption_id = self.comboBox_5.itemText(self.comboBox_5.currentIndex())
         defect_id = self.comboBox_6.itemText(self.comboBox_6.currentIndex())
         texture_id = self.comboBox_7.itemText(self.comboBox_7.currentIndex())
-        cur = conn.cursor()
-        cur.execute("SELECT * from artefacts WHERE id_artefact=?", (id_artefact,))
-        data = cur.fetchall()
-        if data:
+        if classes == '':
             self.lineEdit.setText("")
-            self.lineEdit.setPlaceholderText("Такой ID уже существует, введите другой")
-        elif id_artefact == '':
-            self.lineEdit.setText("")
-            self.lineEdit.setPlaceholderText("Введите ID  артефакта")
-            self.lineEdit.setStyleSheet("color: red;\n")
-            self.lineEdit_4.setText("")
+            self.lineEdit.setPlaceholderText("Введите номер класса")
         else:
-            picture = self.convertImage()
-            local = self.check_local()
-            path_picture = str(self.lineEdit_3.text())
-            QMessageBox.information(QMessageBox(), 'Successful', 'Артефакт добавлен')
-            self.lineEdit.setText("")
-            self.lineEdit.setPlaceholderText("ID артефакта")
-            self.lineEdit.setStyleSheet("color: black;\n")
-            self.lineEdit_2.setText("")
-            self.imagelabel.setText("")
             cur = conn.cursor()
             cur.execute(
-                "INSERT INTO artefacts (picture,id_artefact, name, color_id, type_id, admixture_id, thickness_id, water_absorption_id, defect_id, texture_id, path_picture, local) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)",
-                (picture, id_artefact, name, color_id, type_id, admixture_id, thickness_id, water_absorption_id,
-                 defect_id, texture_id, path_picture, local))
+                "INSERT INTO train_artefacts (classes, color_id, type_id, admixture_id, thickness_id, water_absorption_id, defect_id, texture_id) VALUES (?,?,?,?,?,?,?,?)",
+                (classes, color_id, type_id, admixture_id, thickness_id, water_absorption_id,
+                 defect_id, texture_id))
             conn.commit()
             cur.close()
-            self.lineEdit_3.setText("")
-            self.lineEdit_4.setText("")
-            index = self.comboBox_4.findText("нет данных по типу", QtCore.Qt.MatchFixedString)
-            self.comboBox_4.setCurrentIndex(index)
-            index = self.comboBox_3.findText("нет данных по примесям", QtCore.Qt.MatchFixedString)
-            self.comboBox_3.setCurrentIndex(index)
-            index = self.comboBox_2.findText("нет данных по толщине стенки", QtCore.Qt.MatchFixedString)
-            self.comboBox_2.setCurrentIndex(index)
-            index = self.comboBox.findText("нет данных по цвету", QtCore.Qt.MatchFixedString)
-            self.comboBox.setCurrentIndex(index)
-            index = self.comboBox_5.findText("нет данных по водопоглощению", QtCore.Qt.MatchFixedString)
-            self.comboBox_5.setCurrentIndex(index)
-            index = self.comboBox_6.findText("нет данных по дефектам", QtCore.Qt.MatchFixedString)
-            self.comboBox_6.setCurrentIndex(index)
-            index = self.comboBox_7.findText("нет данных по текстуре массы", QtCore.Qt.MatchFixedString)
-            self.comboBox_7.setCurrentIndex(index)
-            self.imagelabel.hide()
+            QMessageBox.information(QMessageBox(), 'Successful', 'Класс артефакта добавлен')
+
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(800, 620)
@@ -171,10 +96,6 @@ class Ui_MainWindow(QMainWindow):
         self.lineEdit.setEchoMode(QtWidgets.QLineEdit.Normal)
         self.lineEdit.setObjectName("lineEdit")
         self.verticalLayout.addWidget(self.lineEdit)
-        self.lineEdit_2 = QtWidgets.QLineEdit(self.centralwidget)
-        self.lineEdit_2.setMinimumSize(QtCore.QSize(0, 30))
-        self.lineEdit_2.setObjectName("lineEdit_2")
-        self.verticalLayout.addWidget(self.lineEdit_2)
         self.comboBox = QtWidgets.QComboBox(self.centralwidget)
         self.comboBox.setMinimumSize(QtCore.QSize(0, 30))
         self.comboBox.setEditable(True)
@@ -226,29 +147,6 @@ class Ui_MainWindow(QMainWindow):
         self.comboBox_7.setInsertPolicy(QtWidgets.QComboBox.InsertAtCurrent)
         self.comboBox_7.setObjectName("comboBox_7")
         self.verticalLayout.addWidget(self.comboBox_7)
-        self.lineEdit_4 = QtWidgets.QLineEdit(self.centralwidget)
-        self.lineEdit_4.setMinimumSize(QtCore.QSize(0, 30))
-        self.lineEdit_4.setFocusPolicy(QtCore.Qt.StrongFocus)
-        self.lineEdit_4.setAcceptDrops(True)
-        self.lineEdit_4.setFrame(True)
-        self.lineEdit_4.setText("")
-        self.lineEdit_4.setEchoMode(QtWidgets.QLineEdit.Normal)
-        self.lineEdit_4.setObjectName("lineEdit_4")
-        self.verticalLayout.addWidget(self.lineEdit_4)
-        self.lineEdit_3 = QtWidgets.QLineEdit(self.centralwidget)
-        self.lineEdit_3.setMinimumSize(QtCore.QSize(0, 30))
-        self.lineEdit_3.setFocusPolicy(QtCore.Qt.StrongFocus)
-        self.lineEdit_3.setAcceptDrops(True)
-        self.lineEdit_3.setFrame(True)
-        self.lineEdit_3.setReadOnly(True)
-        self.lineEdit_3.setEchoMode(QtWidgets.QLineEdit.Normal)
-        self.lineEdit_3.setObjectName("lineEdit_3")
-        self.verticalLayout.addWidget(self.lineEdit_3)
-        self.pushButton_3 = QtWidgets.QPushButton(self.centralwidget)
-        self.pushButton_3.setObjectName("pushButton_3")
-        self.pushButton_3.setMinimumSize(QtCore.QSize(0, 50))
-        self.pushButton_3.clicked.connect(self.chooseImage)
-        self.verticalLayout.addWidget(self.pushButton_3)
         self.pushButton = QtWidgets.QPushButton(self.centralwidget)
         self.pushButton.setObjectName("pushButton")
         self.pushButton.clicked.connect(self.adding)
@@ -304,18 +202,14 @@ class Ui_MainWindow(QMainWindow):
         self.choose_texture()
 
     def retranslateUi(self, MainWindow):
-        MainWindow.setWindowTitle(QtWidgets.QApplication.translate("MainWindow", "Добавление артефакта", None, -1))
-        self.lineEdit.setPlaceholderText(QtWidgets.QApplication.translate("MainWindow", "ID артефакта", None, -1))
-        self.lineEdit_2.setPlaceholderText(QtWidgets.QApplication.translate("MainWindow", "Часть сосуда", None, -1))
+        MainWindow.setWindowTitle(QtWidgets.QApplication.translate("MainWindow", "Добавление класса артефакта", None, -1))
+        self.lineEdit.setPlaceholderText(QtWidgets.QApplication.translate("MainWindow", "Класс", None, -1))
         self.comboBox_4.setCurrentText(QtWidgets.QApplication.translate("MainWindow", "Тип артефакта", None, -1))
         self.comboBox_3.setCurrentText(QtWidgets.QApplication.translate("MainWindow", "Примеси", None, -1))
         self.comboBox.setCurrentText(QtWidgets.QApplication.translate("MainWindow", "", None, -1))
         self.comboBox_2.setCurrentText(QtWidgets.QApplication.translate("MainWindow", "1", None, -1))
         self.comboBox_5.setCurrentText(QtWidgets.QApplication.translate("MainWindow", "Толщина", None, -1))
         self.comboBox_6.setCurrentText(QtWidgets.QApplication.translate("MainWindow", "Брак", None, -1))
-        self.lineEdit_4.setPlaceholderText(QtWidgets.QApplication.translate("MainWindow", "Место нахождения", None, -1))
-        self.lineEdit_3.setPlaceholderText(QtWidgets.QApplication.translate("MainWindow", "Фото не выбрано", None, -1))
-        self.pushButton_3.setText(QtWidgets.QApplication.translate("MainWindow", "Выбор фото", None, -1))
         self.pushButton.setText(QtWidgets.QApplication.translate("MainWindow", "ОК", None, -1))
         self.pushButton_2.setText(QtWidgets.QApplication.translate("MainWindow", "Назад", None, -1))
 

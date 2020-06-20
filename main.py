@@ -11,6 +11,8 @@
 from PySide2 import QtCore, QtGui, QtWidgets
 from menu import *
 from PyQt5.QtWidgets import*
+import pkg_resources.py2_warn
+
 
 class Ui_MainWindow(object):
     def openWindow(self):
@@ -27,9 +29,9 @@ class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.setEnabled(True)
-        MainWindow.resize(557, 369)
-        MainWindow.setMinimumSize(QtCore.QSize(0, 350))
-        MainWindow.setMaximumSize(QtCore.QSize(558, 402))
+        MainWindow.resize(950, 600)
+        MainWindow.setMinimumSize(QtCore.QSize(950, 600))
+        MainWindow.setMaximumSize(QtCore.QSize(950, 600))
         MainWindow.setStyleSheet("QWidget#centralwidget {background-image: url(:/images/image/tt3.jpg);} \n"
                                  "QLabel#label_3 {\n"
                                  "image: url(:/images/image/avatar.png);}")
@@ -37,7 +39,7 @@ class Ui_MainWindow(object):
         self.centralwidget.setObjectName("centralwidget")
         self.pushButton = QtWidgets.QPushButton(self.centralwidget)
         self.pushButton.setEnabled(True)
-        self.pushButton.setGeometry(QtCore.QRect(200, 250, 131, 50))
+        self.pushButton.setGeometry(QtCore.QRect(380,450, 180, 60))
         font = QtGui.QFont()
         font.setFamily("Buxton Sketch")
         font.setPointSize(14)
@@ -62,17 +64,17 @@ class Ui_MainWindow(object):
                                       " }\n"
                                       "")
         self.label = QtWidgets.QLabel(self.centralwidget)
-        self.label.setGeometry(QtCore.QRect(220, 10, 121, 31))
+        self.label.setGeometry(QtCore.QRect(390, 40, 180, 60))
         font = QtGui.QFont()
         font.setFamily("Buxton Sketch")
-        font.setPointSize(16)
+        font.setPointSize(24)
         font.setUnderline(True)
         self.label.setFont(font)
         self.label.setStyleSheet("opacity: 1;\n"
                                  "color: white;")
         self.label.setObjectName("label")
         self.label_2 = QtWidgets.QLabel(self.centralwidget)
-        self.label_2.setGeometry(QtCore.QRect(240, 160, 81, 16))
+        self.label_2.setGeometry(QtCore.QRect(435, 290, 500, 60))
         font = QtGui.QFont()
         font.setFamily("Buxton Sketch")
         font.setPointSize(18)
@@ -83,16 +85,17 @@ class Ui_MainWindow(object):
                                    "opacity: 1;")
         self.label_2.setObjectName("label_2")
         self.lineEdit = QtWidgets.QLineEdit(self.centralwidget)
-        self.lineEdit.setGeometry(QtCore.QRect(180, 190, 180, 41))
+        self.lineEdit.setGeometry(QtCore.QRect(340, 360, 250, 50))
         font = QtGui.QFont()
         font.setPointSize(14)
         self.lineEdit.setFont(font)
         self.lineEdit.setStyleSheet("")
+        self.lineEdit.setAlignment(QtCore.Qt.AlignHCenter)
         self.lineEdit.setEchoMode(QtWidgets.QLineEdit.Password)
         self.lineEdit.setObjectName("lineEdit")
         self.lineEdit.setPlaceholderText("Введите пароль")
         self.label_3 = QtWidgets.QLabel(self.centralwidget)
-        self.label_3.setGeometry(QtCore.QRect(180, 40, 171, 121))
+        self.label_3.setGeometry(QtCore.QRect(340, 100, 250, 180))
         self.label_3.setText("")
         self.label_3.setObjectName("label_3")
         MainWindow.setCentralWidget(self.centralwidget)
